@@ -60,7 +60,7 @@ class OpenSeaDragonViewer extends Polymer.Element {
         let bodyTag = iframeDoc.createElement("body");
 
         let headScriptTag = iframeDoc.createElement("script");
-        headScriptTag.src = "../../../bower_components/openseadragon/built-openseadragon/openseadragon/openseadragon.min.js";
+        headScriptTag.src = "./bower_components/openseadragon/built-openseadragon/openseadragon/openseadragon.min.js";
         headScriptTag.type = "application/javascript";
 
         headTag.appendChild(headScriptTag);

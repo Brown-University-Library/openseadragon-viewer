@@ -2501,10 +2501,6 @@ html-minifier@^1.1.1:
     relateurl "0.2.x"
     uglify-js "2.6.x"
 
-html-string-builder@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/html-string-builder/-/html-string-builder-1.0.0.tgz#8e04479239ab6d2304c2dbb376f7bc1e3138e743"
-
 htmllint@^0.2.7:
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/htmllint/-/htmllint-0.2.7.tgz#df3ebd82b917ce2c8d78e4eb7929831b5a0e5bea"
@@ -4847,9 +4843,9 @@ ternary-stream@^2.0.1:
     merge-stream "^1.0.0"
     through2 "^2.0.1"
 
-"test-fixture@github:polymerelements/test-fixture":
+test-fixture@PolymerElements/test-fixture:
   version "3.0.0-rc.1"
-  resolved "https://codeload.github.com/polymerelements/test-fixture/tar.gz/26118ef0467501c33c02316e7016a2837baba10f"
+  resolved "https://codeload.github.com/PolymerElements/test-fixture/tar.gz/26118ef0467501c33c02316e7016a2837baba10f"
 
 test-value@^2.1.0:
   version "2.1.0"

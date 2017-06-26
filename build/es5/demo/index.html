@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>openseadragon-viewer demo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../bower_components/iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../bower_components/iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../openseadragon-viewer.html">
+
+
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+      </style>
+    </custom-style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic openseadragon-viewer demo</h3>
+      <demo-snippet>
+        <template>
+          <openseadragon-viewer uri="https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/info.json"></openseadragon-viewer>
+        </template>
+      </demo-snippet>
+      <h3>Width-specified openseadragon-viewer demo</h3>
+      <demo-snippet>
+        <template>
+          <openseadragon-viewer
+            uri="https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/info.json"
+            width="700px"
+          ></openseadragon-viewer>
+        </template>
+      </demo-snippet>
+      <h3>Height-specified openseadragon-viewer demo</h3>
+      <demo-snippet>
+        <template>
+          <openseadragon-viewer
+            uri="https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/info.json"
+            height="900px"
+          ></openseadragon-viewer>
+        </template>
+      </demo-snippet>
+      <h3>Size-specified openseadragon-viewer demo</h3>
+      <demo-snippet>
+        <template>
+          <openseadragon-viewer
+            uri="https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/info.json"
+            width="800px"
+            height="800px"
+          ></openseadragon-viewer>
+        </template>
+      </demo-snippet>
+    </div>
+    <div>
+      <h2>Non-constrained demos</h2>
+      <h3>Basic openseadragon-viewer demo</h3>
+      <openseadragon-viewer uri="https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/info.json"></openseadragon-viewer>
+      <h3>Width-specified openseadragon-viewer demo</h3>
+      <openseadragon-viewer
+        uri="https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/info.json"
+        width="700px"
+      ></openseadragon-viewer>
+      <h3>Height-specified openseadragon-viewer demo</h3>
+      <openseadragon-viewer
+        uri="https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/info.json"
+        height="900px"
+      ></openseadragon-viewer>
+      <h3>Size-specified openseadragon-viewer demo</h3>
+      <openseadragon-viewer
+        uri="https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/info.json"
+        width="800px"
+        height="800px"
+      ></openseadragon-viewer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+<link rel="import" href="./bower_components/polymer/polymer-element.html">
+
+<dom-module id="openseadragon-viewer">
+  <template>
+    <style>
+      :host {
+        display: block;
+        @apply --mirador-viewer-component-theme;
+        width: var(--mirador-viewer-component-width);
+        height: var(--mirador-viewer-component-height);
+      }
+      :host div {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+
+    <div id="container-{{_viewerCount}}"></div>
+
+  </template>
+
+  <script src="openseadragon-viewer.js"></script>
+</dom-module>

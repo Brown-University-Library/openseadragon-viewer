@@ -1,0 +1,30 @@
+{
+  "name": "openseadragon-viewer",
+  "authors": [
+    "Cole Hansen <cole_hansen@brown.edu>"
+  ],
+  "description": "A web component for encapsulating an openseadragon viewer.",
+  "main": "openseadragon-viewer.html",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "keywords": [
+    "viewer",
+    "mirador",
+    "iiif"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0",
+    "iron-demo-helpers": "^2.0.0",
+    "openseadragon": "^2.2.1"
+  },
+  "devDependencies": {
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0"
+  }
+}

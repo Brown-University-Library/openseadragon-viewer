@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>openseadragon-viewer test</title>
+
+    <script src="../build/es2015/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../build/es2015/bower_components/web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../build/es2015/openseadragon-viewer.html">
+  </head>
+  <body>
+
+    <test-fixture id="MinimalTestFixture">
+      <template>
+        <openseadragon-viewer></openseadragon-viewer>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="MinimalWidthPropertyTestFixture">
+      <template>
+        <openseadragon-viewer width="250px"></openseadragon-viewer>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="MinimalHeightPropertyTestFixture">
+      <template>
+        <openseadragon-viewer height="1500px"></openseadragon-viewer>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="MinimalSizeTestFixture">
+      <template>
+        <openseadragon-viewer width="300px" height="300px"></openseadragon-viewer>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="BasicTestFixture">
+      <template>
+        <openseadragon-viewer
+          uri="https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/info.json"
+        ></openseadragon-viewer>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="BasicWidthPropertyTestFixture">
+      <template>
+        <openseadragon-viewer
+          uri="https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/info.json"
+          width="400px"
+        ></openseadragon-viewer>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="BasicHeightPropertyTestFixture">
+      <template>
+        <openseadragon-viewer
+          uri="https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/info.json"
+          height="400px"
+        ></openseadragon-viewer>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="BasicSizeTestFixture">
+      <template>
+        <openseadragon-viewer
+          uri="https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/info.json"
+          width="150px"
+          height="100px"
+        ></openseadragon-viewer>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('openseadragon-viewer', function() {
+
+        test('instantiating the element with default properties works', function(done) {
+          var element = fixture('MinimalTestFixture');
+          assert.equal(element.style.width, '100%');
+          assert.equal(element.style.height, '600px');
+          function furtherTest() {
+            var elementShadowRoot = element.shadowRoot;
+            var openseadragoniframe = elementShadowRoot.querySelector("#iframe-viewer");
+            if (!openseadragoniframe) {
+              window.setTimeout(furtherTest, 750);
+            } else {
+              assert.isDefined(openseadragoniframe);
+              var openseadragonInstance = openseadragoniframe.contentWindow.OpenSeadragon;
+              if (!openseadragonInstance) {
+                window.setTimeout(furtherTest, 750);
+              } else {
+                assert.isDefined(openseadragonInstance);
+                assert.isDefined(openseadragonInstance.Viewer);
+                done();
+              }
+            }
+          }
+          window.setTimeout(furtherTest, 2000);
+        });
+
+        test('instantiating the element with width properties works', function(done) {
+          var element = fixture('MinimalWidthPropertyTestFixture');
+          assert.equal(element.style.width, '250px');
+          assert.equal(element.style.height, '600px');
+          function furtherTest() {
+            var elementShadowRoot = element.shadowRoot;
+            var openseadragoniframe = elementShadowRoot.querySelector("#iframe-viewer");
+            if (!openseadragoniframe) {
+              window.setTimeout(furtherTest, 750);
+            } else {
+              assert.isDefined(openseadragoniframe);
+              var openseadragonInstance = openseadragoniframe.contentWindow.OpenSeadragon;
+              if (!openseadragonInstance) {
+                window.setTimeout(furtherTest, 750);
+              } else {
+                assert.isDefined(openseadragonInstance);
+                assert.isDefined(openseadragonInstance.Viewer);
+                done();
+              }
+            }
+          }
+          window.setTimeout(furtherTest, 2000);
+        });
+
+        test('instantiating the element with height properties works', function(done) {
+          var element = fixture('MinimalHeightPropertyTestFixture');
+          assert.equal(element.style.width, '100%');
+          assert.equal(element.style.height, '1500px');
+          function furtherTest() {
+            var elementShadowRoot = element.shadowRoot;
+            var openseadragoniframe = elementShadowRoot.querySelector("#iframe-viewer");
+            if (!openseadragoniframe) {
+              window.setTimeout(furtherTest, 750);
+            } else {
+              assert.isDefined(openseadragoniframe);
+              var openseadragonInstance = openseadragoniframe.contentWindow.OpenSeadragon;
+              if (!openseadragonInstance) {
+                window.setTimeout(furtherTest, 750);
+              } else {
+                assert.isDefined(openseadragonInstance);
+                assert.isDefined(openseadragonInstance.Viewer);
+                done();
+              }
+            }
+          }
+          window.setTimeout(furtherTest, 2000);
+        });
+
+        test('instantiating the element with width, height properties works', function(done) {
+          var element = fixture('MinimalSizeTestFixture');
+          assert.equal(element.style.width, '300px');
+          assert.equal(element.style.height, '300px');
+          function furtherTest() {
+            var elementShadowRoot = element.shadowRoot;
+            var openseadragoniframe = elementShadowRoot.querySelector("#iframe-viewer");
+            if (!openseadragoniframe) {
+              window.setTimeout(furtherTest, 750);
+            } else {
+              assert.isDefined(openseadragoniframe);
+              var openseadragonInstance = openseadragoniframe.contentWindow.OpenSeadragon;
+              if (!openseadragonInstance) {
+                window.setTimeout(furtherTest, 750);
+              } else {
+                assert.isDefined(openseadragonInstance);
+                assert.isDefined(openseadragonInstance.Viewer);
+                done();
+              }
+            }
+          }
+          window.setTimeout(furtherTest, 2000);
+        });
+
+        test('instantiating the element with uri properties works', function(done) {
+          var element = fixture('BasicTestFixture');
+          assert.equal(element.style.width, '100%');
+          assert.equal(element.style.height, '600px');
+          function furtherTest() {
+            var elementShadowRoot = element.shadowRoot;
+            var openseadragoniframe = elementShadowRoot.querySelector("#iframe-viewer");
+            if (!openseadragoniframe) {
+              window.setTimeout(furtherTest, 750);
+            } else {
+              assert.isDefined(openseadragoniframe);
+              var openseadragonInstance = openseadragoniframe.contentWindow.OpenSeadragon;
+              if (!openseadragonInstance) {
+                window.setTimeout(furtherTest, 750);
+              } else {
+                assert.isDefined(openseadragonInstance);
+                assert.isDefined(openseadragonInstance.Viewer);
+                done();
+              }
+            }
+          }
+          window.setTimeout(furtherTest, 2000);
+        });
+
+        test('instantiating the element with uri, width properties works', function(done) {
+          var element = fixture('BasicWidthPropertyTestFixture');
+          assert.equal(element.style.width, '400px');
+          assert.equal(element.style.height, '600px');
+          function furtherTest() {
+            var elementShadowRoot = element.shadowRoot;
+            var openseadragoniframe = elementShadowRoot.querySelector("#iframe-viewer");
+            if (!openseadragoniframe) {
+              window.setTimeout(furtherTest, 750);
+            } else {
+              assert.isDefined(openseadragoniframe);
+              var openseadragonInstance = openseadragoniframe.contentWindow.OpenSeadragon;
+              if (!openseadragonInstance) {
+                window.setTimeout(furtherTest, 750);
+              } else {
+                assert.isDefined(openseadragonInstance);
+                assert.isDefined(openseadragonInstance.Viewer);
+                done();
+              }
+            }
+          }
+          window.setTimeout(furtherTest, 2000);
+        });
+
+        test('instantiating the element with uri, height properties works', function(done) {
+          var element = fixture('BasicHeightPropertyTestFixture');
+          assert.equal(element.style.width, '100%');
+          assert.equal(element.style.height, '400px');
+          function furtherTest() {
+            var elementShadowRoot = element.shadowRoot;
+            var openseadragoniframe = elementShadowRoot.querySelector("#iframe-viewer");
+            if (!openseadragoniframe) {
+              window.setTimeout(furtherTest, 750);
+            } else {
+              assert.isDefined(openseadragoniframe);
+              var openseadragonInstance = openseadragoniframe.contentWindow.OpenSeadragon;
+              if (!openseadragonInstance) {
+                window.setTimeout(furtherTest, 750);
+              } else {
+                assert.isDefined(openseadragonInstance);
+                assert.isDefined(openseadragonInstance.Viewer);
+                done();
+              }
+            }
+          }
+          window.setTimeout(furtherTest, 2000);
+        });
+
+        test('instantiating the element with uri, width, height properties works', function(done) {
+          var element = fixture('BasicSizeTestFixture');
+          assert.equal(element.style.width, '150px');
+          assert.equal(element.style.height, '100px');
+          function furtherTest() {
+            var elementShadowRoot = element.shadowRoot;
+            var openseadragoniframe = elementShadowRoot.querySelector("#iframe-viewer");
+            if (!openseadragoniframe) {
+              window.setTimeout(furtherTest, 750);
+            } else {
+              assert.isDefined(openseadragoniframe);
+              var openseadragonInstance = openseadragoniframe.contentWindow.OpenSeadragon;
+              if (!openseadragonInstance) {
+                window.setTimeout(furtherTest, 750);
+              } else {
+                assert.isDefined(openseadragonInstance);
+                assert.isDefined(openseadragonInstance.Viewer);
+                done();
+              }
+            }
+          }
+          window.setTimeout(furtherTest, 2000);
+        });
+
+      });
+    </script>
+
+  </body>
+</html>

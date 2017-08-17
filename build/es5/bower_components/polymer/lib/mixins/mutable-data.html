@@ -73,7 +73,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
    * will be worse as opposed to using strict dirty checking with immutable
    * patterns or Polymer's path notification API.
    *
-   * @polymerMixin
+   * @mixinFunction
+   * @polymer
    * @memberof Polymer
    * @summary Element class mixin to skip strict dirty-checking for objects
    *   and arrays
@@ -81,7 +82,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
   Polymer.MutableData = Polymer.dedupingMixin(function (superClass) {
 
     /**
-     * @polymerMixinClass
+     * @polymer
+     * @mixinClass
      * @implements {Polymer_MutableData}
      */
     var MutableData = function (_superClass) {
@@ -120,6 +122,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
       return MutableData;
     }(superClass);
+    /** @type {boolean} */
+
+
+    MutableData.prototype.mutableData = false;
 
     return MutableData;
   });
@@ -156,7 +162,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
    * strict dirty checking with immutable patterns or Polymer's path notification
    * API.
    *
-   * @polymerMixin
+   * @mixinFunction
+   * @polymer
    * @memberof Polymer
    * @summary Element class mixin to optionally skip strict dirty-checking
    *   for objects and arrays
@@ -164,7 +171,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
   Polymer.OptionalMutableData = Polymer.dedupingMixin(function (superClass) {
 
     /**
-     * @polymerMixinClass
+     * @mixinClass
+     * @polymer
      * @implements {Polymer_OptionalMutableData}
      */
     var OptionalMutableData = function (_superClass2) {

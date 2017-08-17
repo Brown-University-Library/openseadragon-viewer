@@ -29,6 +29,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   // constructor even though no `this` is used and it returns an instance.
 
   var newInstance = null;
+  /**
+   * @constructor
+   * @extends {HTMLTemplateElement}
+   */
   function HTMLTemplateElementExtension() {
     return newInstance;
   }
@@ -38,7 +42,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       writable: true
     }
   });
+  /**
+   * @constructor
+   * @implements {Polymer_PropertyEffects}
+   * @extends {HTMLTemplateElementExtension}
+   */
   var DataTemplate = Polymer.PropertyEffects(HTMLTemplateElementExtension);
+  /**
+   * @constructor
+   * @implements {Polymer_MutableData}
+   * @extends {DataTemplate}
+   */
   var MutableDataTemplate = Polymer.MutableData(DataTemplate);
 
   // Applies a DataTemplate subclass to a <template> instance
@@ -61,6 +75,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     return _class;
   }());
+
+  /**
+   * @polymer
+   * @customElement
+   * @appliesMixin Polymer.PropertyEffects
+   * @unrestricted
+   */
 
   var TemplateInstanceBase = function (_base) {
     _inherits(TemplateInstanceBase, _base);
@@ -216,7 +237,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
        * is either another templatize instance that had option `parentModel: true`,
        * or else the host element.
        *
-       * @return {Polymer.PropertyEffectsInterface} The parent model of this instance
+       * @return {Polymer_PropertyEffects} The parent model of this instance
        */
 
     }, {
@@ -240,6 +261,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return TemplateInstanceBase;
   }(base);
 
+  /** @type {!DataTemplate} */
+
+
+  TemplateInstanceBase.prototype.__dataHost;
+  /** @type {!TemplatizeOptions} */
+  TemplateInstanceBase.prototype.__templatizeOptions;
+  /** @type {!Polymer_PropertyEffects} */
+  TemplateInstanceBase.prototype._methodHost;
+  /** @type {!Object} */
+  TemplateInstanceBase.prototype.__templatizeOwner;
+  /** @type {!Object} */
+  TemplateInstanceBase.prototype.__hostProps;
+
+  /**
+   * @constructor
+   * @extends {TemplateInstanceBase}
+   * @implements {Polymer_MutableData}
+   */
   var MutableTemplateInstanceBase = Polymer.MutableData(TemplateInstanceBase);
 
   function findMethodHost(template) {
@@ -252,12 +291,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return templateHost && templateHost._methodHost || templateHost;
   }
 
+  /* eslint-disable valid-jsdoc */
+  /**
+   * @suppress {missingProperties} class.prototype is not defined for some reason
+   */
   function createTemplatizerClass(template, templateInfo, options) {
     // Anonymous class created by the templatize
-    /**
-     * @unrestricted
-     */
     var base = options.mutableData ? MutableTemplateInstanceBase : TemplateInstanceBase;
+    /**
+     * @constructor
+     * @extends {base}
+     */
     var klass = function (_base2) {
       _inherits(klass, _base2);
 
@@ -275,6 +319,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return klass;
   }
 
+  /**
+   * @suppress {missingProperties} class.prototype is not defined for some reason
+   */
   function addPropagateEffects(template, templateInfo, options) {
     var userForwardHostProp = options.forwardHostProp;
     if (userForwardHostProp) {
@@ -316,6 +363,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       template._enableProperties();
     }
   }
+  /* eslint-enable valid-jsdoc */
 
   function createForwardHostPropEffect(hostProp, userForwardHostProp) {
     return function forwardHostProp(template, prop, props) {
@@ -377,7 +425,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
    * of any event handlers.
    *
    *     // Customze property forwarding and event model decoration
-   *     let TemplateClass = Polymer.Tempaltize.templatize(template, this, {
+   *     let TemplateClass = Polymer.Templatize.templatize(template, this, {
    *       parentModel: true,
    *       instanceProps: {...},
    *       forwardHostProp(property, value) {...},
@@ -390,6 +438,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
    * @summary Module for preparing and stamping instances of templates
    *   utilizing Polymer templating features.
    */
+
   var Templatize = {
 
     /**
@@ -445,15 +494,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      * should be stored on the `owner` such that they can be retrieved via `this`.
      *
      * @memberof Polymer.Templatize
-     * @param {HTMLTemplateElement} template Template to templatize
-     * @param {*} owner Owner of the template instances; any optional callbacks
-     *   will be bound to this owner.
-     * @param {*=} options Options dictionary (see summary for details)
-     * @return {TemplateInstanceBase} Generated class bound to the template
+     * @param {!HTMLTemplateElement} template Template to templatize
+     * @param {!Polymer_PropertyEffects} owner Owner of the template instances;
+     *   any optional callbacks will be bound to this owner.
+     * @param {Object=} options Options dictionary (see summary for details)
+     * @return {function(new:TemplateInstanceBase)} Generated class bound to the template
      *   provided
+     * @suppress {invalidCasts}
      */
     templatize: function templatize(template, owner, options) {
-      options = options || {};
+      options = /** @type {!TemplatizeOptions} */options || {};
       if (template.__templatizeOwner) {
         throw new Error('A <template> can only be templatized once');
       }
@@ -484,7 +534,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       klass.prototype.__dataHost = template;
       klass.prototype.__templatizeOwner = owner;
       klass.prototype.__hostProps = templateInfo.hostProps;
-      return klass;
+      return (/** @type {function(new:TemplateInstanceBase)} */klass
+      );
     },
 
 
@@ -505,28 +556,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      * @memberof Polymer.Templatize
      * @param {HTMLTemplateElement} template The model will be returned for
      *   elements stamped from this template
-     * @param {HTMLElement} el Element for which to return a template model.
+     * @param {Node} node Node for which to return a template model.
      * @return {TemplateInstanceBase} Template instance representing the
      *   binding scope for the element
      */
-    modelForElement: function modelForElement(template, el) {
+    modelForElement: function modelForElement(template, node) {
       var model = void 0;
-      while (el) {
+      while (node) {
         // An element with a __templatizeInstance marks the top boundary
         // of a scope; walk up until we find one, and then ensure that
         // its __dataHost matches `this`, meaning this dom-repeat stamped it
-        if (model = el.__templatizeInstance) {
+        if (model = node.__templatizeInstance) {
           // Found an element stamped by another template; keep walking up
           // from its __dataHost
           if (model.__dataHost != template) {
-            el = model.__dataHost;
+            node = model.__dataHost;
           } else {
             return model;
           }
         } else {
           // Still in a template scope, keep going up until
           // a __templatizeInstance is found
-          el = el.parentNode;
+          node = node.parentNode;
         }
       }
       return null;
@@ -534,4 +585,5 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   };
 
   Polymer.Templatize = Templatize;
+  Polymer.TemplateInstanceBase = TemplateInstanceBase;
 })();</script>

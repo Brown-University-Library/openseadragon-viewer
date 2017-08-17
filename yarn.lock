@@ -2066,6 +2066,12 @@ generate-object-property@^1.1.0:
   dependencies:
     is-property "^1.0.0"
 
+get-git-info@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/get-git-info/-/get-git-info-1.0.0.tgz#4f3030f0688968cfb296167abedfcc28b861e51a"
+  dependencies:
+    iniparser "^1.0.5"
+
 get-stdin@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/get-stdin/-/get-stdin-4.0.1.tgz#b968c6b0a04384324902e8bf1a5df32579a450fe"
@@ -2627,6 +2633,10 @@ inherits@2.0.1:
 ini@^1.3.4, ini@~1.3.0:
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.4.tgz#0537cb79daf59b59a1a517dff706c86ec039162e"
+
+iniparser@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/iniparser/-/iniparser-1.0.5.tgz#836d6befe6dfbfcee0bccf1cf9f2acc7027f783d"
 
 interpret@^1.0.0:
   version "1.0.3"
@@ -4938,6 +4948,13 @@ tough-cookie@~2.3.0:
   resolved "https://registry.yarnpkg.com/tough-cookie/-/tough-cookie-2.3.2.tgz#f081f76e4c85720e6c37a5faced737150d84072a"
   dependencies:
     punycode "^1.4.1"
+
+travis-cli@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/travis-cli/-/travis-cli-1.0.9.tgz#adebb3d16271d249408e1f04e45c8209efcea5d4"
+  dependencies:
+    commander "^2.9.0"
+    get-git-info "^1.0.0"
 
 trim-newlines@^1.0.0:
   version "1.0.0"

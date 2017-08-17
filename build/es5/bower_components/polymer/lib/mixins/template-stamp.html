@@ -112,14 +112,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
    * - Nested template content caching/removal and re-installation (performance
    *   optimization)
    *
-   * @polymerMixin
+   * @mixinFunction
+   * @polymer
    * @memberof Polymer
    * @summary Element class mixin that provides basic template parsing and stamping
    */
   Polymer.TemplateStamp = Polymer.dedupingMixin(function (superClass) {
 
     /**
-     * @polymerMixinClass
+     * @polymer
+     * @mixinClass
      * @implements {Polymer_TemplateStamp}
      */
     var TemplateStamp = function (_superClass) {
@@ -154,8 +156,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
          * removed after being noted in notes, and any nested `<template>.content`
          * is removed and stored in notes as well.
          *
-         * @param {HTMLTemplateElement} template Template to stamp
-         * @return {DocumentFragment} Cloned template content
+         * @param {!HTMLTemplateElement} template Template to stamp
+         * @return {!StampedTemplate} Cloned template content
          */
         value: function _stampTemplate(template) {
           // Polyfill support: bootstrap the template if it has not already been
@@ -165,7 +167,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
           var templateInfo = this.constructor._parseTemplate(template);
           var nodeInfo = templateInfo.nodeInfoList;
           var content = templateInfo.content || template.content;
-          var dom = document.importNode(content, true);
+          var dom = /** @type DocumentFragment */document.importNode(content, true);
           // NOTE: ShadyDom optimization indicating there is an insertion point
           dom.__noInsertionPoint = !templateInfo.hasInsertionPoint;
           var nodes = dom.nodeList = new Array(nodeInfo.length);
@@ -176,7 +178,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
             applyTemplateContent(this, node, info);
             applyEventListener(this, node, info);
           }
-          return dom;
+          return (/** @type {!StampedTemplate} */dom
+          );
         }
 
         /**
@@ -303,10 +306,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
          * e.g. event annotations may be removed after being noted in the
          * template metadata.
          *
-         * @param {HTMLTemplateElement} template Template to parse
-         * @param {Object=} outerTemplateInfo Template metadata from the outer
+         * @param {!HTMLTemplateElement} template Template to parse
+         * @param {TemplateInfo=} outerTemplateInfo Template metadata from the outer
          *   template, for parsing nested templates
-         * @return {Object} Parsed template metadata
+         * @return {!TemplateInfo} Parsed template metadata
          */
         value: function _parseTemplate(template, outerTemplateInfo) {
           // since a template may be re-used, memo-ize metadata
@@ -332,8 +335,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
          * metadata based on this node.
          *
          * @param {Node} node Node to parse
-         * @param {Object} templateInfo Template metadata for current template
-         * @param {Object} nodeInfo Node metadata for current template.
+         * @param {!TemplateInfo} templateInfo Template metadata for current template
+         * @param {!NodeInfo} nodeInfo Node metadata for current template.
          * @return {boolean} `true` if the visited node added node-specific
          *   metadata to `nodeInfo`
          */
@@ -342,17 +345,18 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         key: '_parseTemplateNode',
         value: function _parseTemplateNode(node, templateInfo, nodeInfo) {
           var noted = void 0;
-          if (node.localName == 'template' && !node.hasAttribute('preserve-content')) {
-            noted = this._parseTemplateNestedTemplate(node, templateInfo, nodeInfo) || noted;
-          } else if (node.localName === 'slot') {
+          var element = /** @type Element */node;
+          if (element.localName == 'template' && !element.hasAttribute('preserve-content')) {
+            noted = this._parseTemplateNestedTemplate(element, templateInfo, nodeInfo) || noted;
+          } else if (element.localName === 'slot') {
             // For ShadyDom optimization, indicating there is an insertion point
             templateInfo.hasInsertionPoint = true;
           }
-          if (node.firstChild) {
-            noted = this._parseTemplateChildNodes(node, templateInfo, nodeInfo) || noted;
+          if (element.firstChild) {
+            noted = this._parseTemplateChildNodes(element, templateInfo, nodeInfo) || noted;
           }
-          if (node.hasAttributes && node.hasAttributes()) {
-            noted = this._parseTemplateNodeAttributes(node, templateInfo, nodeInfo) || noted;
+          if (element.hasAttributes && element.hasAttributes()) {
+            noted = this._parseTemplateNodeAttributes(element, templateInfo, nodeInfo) || noted;
           }
           return noted;
         }
@@ -366,8 +370,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
          * if the `templateInfo.stripWhitespace` setting was provided.
          *
          * @param {Node} root Root node whose `childNodes` will be parsed
-         * @param {Object} templateInfo Template metadata for current template
-         * @param {Object} nodeInfo Node metadata for current template.
+         * @param {!TemplateInfo} templateInfo Template metadata for current template
+         * @param {!NodeInfo} nodeInfo Node metadata for current template.
          */
 
       }, {
@@ -384,7 +388,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
             // manually.
             next = node.nextSibling;
             if (node.nodeType === Node.TEXT_NODE) {
-              var n = next;
+              var /** Node */n = next;
               while (n && n.nodeType === Node.TEXT_NODE) {
                 node.textContent += n.textContent;
                 next = n.nextSibling;
@@ -399,7 +403,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
             }
             var childInfo = { parentIndex: parentIndex, parentInfo: nodeInfo };
             if (this._parseTemplateNode(node, templateInfo, childInfo)) {
-              childInfo.infoIndex = templateInfo.nodeInfoList.push(childInfo) - 1;
+              childInfo.infoIndex = templateInfo.nodeInfoList.push( /** @type {!NodeInfo} */childInfo) - 1;
             }
             // Increment if not removed
             if (node.parentNode) {
@@ -419,9 +423,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
          * (an optimization to avoid the cost of cloning nested template content).
          *
          * @param {HTMLTemplateElement} node Node to parse (a <template>)
-         * @param {Object} outerTemplateInfo Template metadata for current template
+         * @param {TemplateInfo} outerTemplateInfo Template metadata for current template
          *   that includes the template `node`
-         * @param {Object} nodeInfo Node metadata for current template.
+         * @param {!NodeInfo} nodeInfo Node metadata for current template.
          * @return {boolean} `true` if the visited node added node-specific
          *   metadata to `nodeInfo`
          */
@@ -440,9 +444,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
          * Parses template node attributes and adds node metadata to `nodeInfo`
          * for nodes of interest.
          *
-         * @param {Node} node Node to parse
-         * @param {Object} templateInfo Template metadata for current template
-         * @param {Object} nodeInfo Node metadata for current template.
+         * @param {Element} node Node to parse
+         * @param {TemplateInfo} templateInfo Template metadata for current template
+         * @param {NodeInfo} nodeInfo Node metadata for current template.
          * @return {boolean} `true` if the visited node added node-specific
          *   metadata to `nodeInfo`
          */
@@ -452,7 +456,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         value: function _parseTemplateNodeAttributes(node, templateInfo, nodeInfo) {
           // Make copy of original attribute list, since the order may change
           // as attributes are added and removed
-          var noted = void 0;
+          var noted = false;
           var attrs = Array.from(node.attributes);
           for (var i = attrs.length - 1, a; a = attrs[i]; i--) {
             noted = this._parseTemplateNodeAttribute(node, templateInfo, nodeInfo, a.name, a.value) || noted;
@@ -467,11 +471,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
          * This implementation adds metadata for `on-event="handler"` attributes
          * and `id` attributes.
          *
-         * @param {Node} node Node to parse
-         * @param {Object} templateInfo Template metadata for current template
-         * @param {Object} nodeInfo Node metadata for current template.
+         * @param {Element} node Node to parse
+         * @param {!TemplateInfo} templateInfo Template metadata for current template
+         * @param {!NodeInfo} nodeInfo Node metadata for current template.
          * @param {string} name Attribute name
-         * @param {*} value Attribute value
+         * @param {string} value Attribute value
          * @return {boolean} `true` if the visited node added node-specific
          *   metadata to `nodeInfo`
          */
@@ -494,6 +498,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
               nodeInfo.id = value;
               return true;
             }
+          return false;
         }
 
         /**
@@ -510,7 +515,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       }, {
         key: '_contentForTemplate',
         value: function _contentForTemplate(template) {
-          var templateInfo = template.__templateInfo;
+          var templateInfo = /** @type {HTMLTemplateElementWithInfo} */template._templateInfo;
           return templateInfo && templateInfo.content || template.content;
         }
       }]);

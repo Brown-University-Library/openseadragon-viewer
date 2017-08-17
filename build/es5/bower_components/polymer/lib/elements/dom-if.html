@@ -39,7 +39,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
    * Set the `restamp` property to true to force the stamped content to be
    * created / destroyed when the `if` condition changes.
    *
-   * @polymerElement
+   * @customElement
+   * @polymer
    * @extends Polymer.Element
    * @memberof Polymer
    * @summary Custom element that conditionally stamps and hides or removes
@@ -109,6 +110,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       _this.__renderDebouncer = null;
       _this.__invalidProps = null;
       _this.__instance = null;
+      _this._lastIf = false;
+      _this.__ctor = null;
       return _this;
     }
 
@@ -218,6 +221,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
               // dom-if templatizer instances require `mutable: true`, as
               // `__syncHostProperties` relies on that behavior to sync objects
               mutableData: true,
+              /**
+               * @param {string} prop Property to forward
+               * @param {*} value Value of property
+               * @this {this}
+               */
               forwardHostProp: function forwardHostProp(prop, value) {
                 if (this.__instance) {
                   if (this.if) {

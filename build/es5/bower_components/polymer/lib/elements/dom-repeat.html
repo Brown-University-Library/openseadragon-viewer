@@ -25,12 +25,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 (function () {
   'use strict';
 
+  var TemplateInstanceBase = Polymer.TemplateInstanceBase; // eslint-disable-line
+
   /**
    * @constructor
    * @implements {Polymer_OptionalMutableData}
    * @extends {Polymer.Element}
    */
-
   var domRepeatBase = Polymer.OptionalMutableData(Polymer.Element);
 
   /**
@@ -75,7 +76,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
    * Notifications for changes to items sub-properties will be forwarded to template
    * instances, which will update via the normal structured data notification system.
    *
-   * Mutations to the `items` array itself should me made using the Array
+   * Mutations to the `items` array itself should be made using the Array
    * mutation API's on `Polymer.Base` (`push`, `pop`, `splice`, `shift`,
    * `unshift`), and template instances will be kept in sync with the data in the
    * array.
@@ -120,10 +121,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
    *           filter="isEngineer" observe="type manager.type">
    * ```
    *
-   * @polymerElement
+   * @customElement
+   * @polymer
    * @memberof Polymer
-   * @extends Polymer.Element
-   * @mixes Polymer.MutableData
+   * @extends {domRepeatBase}
+   * @appliesMixin Polymer.OptionalMutableData
    * @summary Custom element for stamping instance of a template bound to
    *   items in an array.
    */
@@ -305,11 +307,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       _this.__itemsIdxToInstIdx = {};
       _this.__chunkCount = null;
       _this.__lastChunkTime = null;
-      _this.__needFullRefresh = false;
       _this.__sortFn = null;
       _this.__filterFn = null;
       _this.__observePaths = null;
       _this.__ctor = null;
+      _this.__isDetached = true;
+      _this.template = null;
       return _this;
     }
 
@@ -367,12 +370,23 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
             mutableData: this.mutableData,
             parentModel: true,
             instanceProps: instanceProps,
+            /**
+             * @this {this}
+             * @param {string} prop Property to set
+             * @param {*} value Value to set property to
+             */
             forwardHostProp: function forwardHostProp(prop, value) {
               var i$ = this.__instances;
               for (var i = 0, inst; i < i$.length && (inst = i$[i]); i++) {
                 inst.forwardHostProp(prop, value);
               }
             },
+            /**
+             * @this {this}
+             * @param {Object} inst Instance to notify
+             * @param {string} prop Property to notify
+             * @param {*} value Value to notify
+             */
             notifyInstanceProp: function notifyInstanceProp(inst, prop, value) {
               if (Polymer.Path.matches(this.as, prop)) {
                 var idx = inst[this.itemsIndexAs];
@@ -404,7 +418,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         this.__sortFn = sort && (typeof sort == 'function' ? sort : function () {
           return methodHost[sort].apply(methodHost, arguments);
         });
-        this.__needFullRefresh = true;
         if (this.items) {
           this.__debounceRender(this.__render);
         }
@@ -416,7 +429,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         this.__filterFn = filter && (typeof filter == 'function' ? filter : function () {
           return methodHost[filter].apply(methodHost, arguments);
         });
-        this.__needFullRefresh = true;
         if (this.items) {
           this.__debounceRender(this.__render);
         }
@@ -482,7 +494,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         if (!this.__handleItemPath(change.path, change.value)) {
           // Otherwise, the array was reset ('items') or spliced ('items.splices'),
           // so queue a full refresh
-          this.__needFullRefresh = true;
           this.__initializeChunking();
           this.__debounceRender(this.__render);
         }
@@ -495,7 +506,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
           var paths = this.__observePaths;
           for (var i = 0; i < paths.length; i++) {
             if (path.indexOf(paths[i]) === 0) {
-              this.__needFullRefresh = true;
               this.__debounceRender(this.__render, this.delay);
               return true;
             }
@@ -504,13 +514,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       }
 
       /**
-       * @param {function()} fn Function to debounce.
+       * @param {function(this:DomRepeat)} fn Function to debounce.
        * @param {number=} delay Delay in ms to debounce by.
        */
 
     }, {
       key: '__debounceRender',
-      value: function __debounceRender(fn, delay) {
+      value: function __debounceRender(fn) {
+        var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
         this.__renderDebouncer = Polymer.Debouncer.debounce(this.__renderDebouncer, delay > 0 ? Polymer.Async.timeOut.after(delay) : Polymer.Async.microTask, fn.bind(this));
         Polymer.enqueueDebouncer(this.__renderDebouncer);
       }
@@ -527,7 +539,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       key: 'render',
       value: function render() {
         // Queue this repeater, then flush all in order
-        this.__needFullRefresh = true;
         this.__debounceRender(this.__render);
         Polymer.flush();
       }
@@ -678,18 +689,20 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         // If path was index into array...
         if (itemsIdx == parseInt(itemsIdx, 10)) {
           var itemSubPath = dot < 0 ? '' : itemsPath.substring(dot + 1);
-          // See if the item subpath should trigger a full refresh...
-          if (!this.__handleObservedPaths(itemSubPath)) {
-            // If not, forward to the instance for that index
-            var instIdx = this.__itemsIdxToInstIdx[itemsIdx];
-            var inst = this.__instances[instIdx];
-            if (inst) {
-              var itemPath = this.as + (itemSubPath ? '.' + itemSubPath : '');
-              // This is effectively `notifyPath`, but avoids some of the overhead
-              // of the public API
-              inst._setPendingPropertyOrPath(itemPath, value, false, true);
-              inst._flushProperties();
-            }
+          // If the path is observed, it will trigger a full refresh
+          this.__handleObservedPaths(itemSubPath);
+          // Note, even if a rull refresh is triggered, always do the path
+          // notification because unless mutableData is used for dom-repeat
+          // and all elements in the instance subtree, a full refresh may
+          // not trigger the proper update.
+          var instIdx = this.__itemsIdxToInstIdx[itemsIdx];
+          var inst = this.__instances[instIdx];
+          if (inst) {
+            var itemPath = this.as + (itemSubPath ? '.' + itemSubPath : '');
+            // This is effectively `notifyPath`, but avoids some of the overhead
+            // of the public API
+            inst._setPendingPropertyOrPath(itemPath, value, false, true);
+            inst._flushProperties();
           }
           return true;
         }

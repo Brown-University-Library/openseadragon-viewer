@@ -21,6 +21,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var AsyncModule = void 0; // eslint-disable-line no-unused-vars
 
+  /**
+   * @summary Collapse multiple callbacks into one invocation after a timer.
+   * @memberof Polymer
+   */
+
   var Debouncer = function () {
     function Debouncer() {
       _classCallCheck(this, Debouncer);
@@ -111,7 +116,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
        * `_debounceWork` method. Then in a test, call `Polymer.flush` to ensure
        * the debouncer has completed.
        *
-       * @param {Polymer.Debouncer?} debouncer Debouncer object.
+       * @param {Debouncer?} debouncer Debouncer object.
        * @param {!AsyncModule} asyncModule Object with Async interface
        * @param {function()} callback Callback to run.
        * @return {!Debouncer} Returns a debouncer object.
@@ -132,11 +137,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     return Debouncer;
   }();
-
-  /**
-   * @memberof Polymer
-   */
-
 
   Polymer.Debouncer = Debouncer;
 })();</script>

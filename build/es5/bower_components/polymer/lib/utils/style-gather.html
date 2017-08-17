@@ -21,6 +21,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     return Polymer.DomModule.import(moduleId);
   }
 
+  /** @typedef {{assetpath: string}} */
+  var templateWithAssetPath = void 0; // eslint-disable-line no-unused-vars
+
   /**
    * Module with utilities for collection CSS text from `<templates>`, external
    * stylesheets, and `dom-module`s.
@@ -38,6 +41,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @param {string} moduleIds List of dom-module id's within which to
      * search for css.
      * @return {string} Concatenated CSS content from specified `dom-module`s
+     * @this {StyleGather}
      */
     cssFromModules: function cssFromModules(moduleIds) {
       var modules = moduleIds.trim().split(' ');
@@ -60,6 +64,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @memberof Polymer.StyleGather
      * @param {string} moduleId dom-module id to gather styles from
      * @return {string} Concatenated CSS content from specified `dom-module`
+     * @this {StyleGather}
      */
     cssFromModule: function cssFromModule(moduleId) {
       var m = importModule(moduleId);
@@ -68,7 +73,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // include css from the first template in the module
         var t = m.querySelector('template');
         if (t) {
-          cssText += this.cssFromTemplate(t, m.assetpath);
+          cssText += this.cssFromTemplate(t, /** @type {templateWithAssetPath }*/m.assetpath);
         }
         // module imports: <link rel="import" type="css">
         cssText += this.cssFromModuleImports(moduleId);
@@ -90,6 +95,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @param {HTMLTemplateElement} template Template to gather styles from
      * @param {string} baseURI Base URI to resolve the URL against
      * @return {string} Concatenated CSS content from specified template
+     * @this {StyleGather}
      */
     cssFromTemplate: function cssFromTemplate(template, baseURI) {
       var cssText = '';
@@ -117,6 +123,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @memberof Polymer.StyleGather
      * @param {string} moduleId Id of `dom-module` to gather CSS from
      * @return {string} Concatenated CSS content from links in specified `dom-module`
+     * @this {StyleGather}
      */
     cssFromModuleImports: function cssFromModuleImports(moduleId) {
       var cssText = '';

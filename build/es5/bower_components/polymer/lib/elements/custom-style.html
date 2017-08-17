@@ -37,6 +37,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
    * To use, simply wrap an inline `<style>` tag in the main document whose
    * CSS uses these features with a `<custom-style>` element.
    *
+   * @customElement
    * @extends HTMLElement
    * @memberof Polymer
    * @summary Custom element for defining styles in the main document that can
@@ -70,9 +71,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         if (this._style) {
           return this._style;
         }
-        var style = this.querySelector('style');
+        var style = /** @type {HTMLStyleElement} */this.querySelector('style');
         if (!style) {
-          return;
+          return null;
         }
         this._style = style;
         var include = style.getAttribute(attr);

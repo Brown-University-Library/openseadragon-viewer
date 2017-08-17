@@ -1,6 +1,6 @@
 # openseadragon-viewer
 
-[![Build Status](https://travis-ci.org/colehansen/openseadragon-viewer.svg)](https://travis-ci.org/colehansen/openseadragon-viewer)
+[![Build Status](https://travis-ci.org/Brown-University-Library/openseadragon-viewer.svg)](https://travis-ci.org/Brown-University-Library/openseadragon-viewer)
 
 A Polymer custom element component to encapsulate a openseadragon viewer instance.
 
